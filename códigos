@@ -1,0 +1,41 @@
+CREATE TABLE Drivers (
+    DriverID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(100) NOT NULL,
+    CNH VARCHAR(20) NOT NULL UNIQUE,
+    Endereço VARCHAR(200),
+    Contato VARCHAR(50)
+);
+
+CREATE TABLE Clients (
+    ClientID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(100) NOT NULL,
+    Empresa VARCHAR(100),
+    Endereço VARCHAR(200),
+    Contato VARCHAR(50)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY IDENTITY(1,1),
+    ClientID INT NOT NULL,
+    DriverID INT,
+    DetalhesPedido TEXT,
+    DataEntrega DATE NOT NULL,
+    Status VARCHAR(50) CHECK (Status IN ('Pendente', 'Concluído', 'Cancelado')),
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) ON DELETE CASCADE,
+    FOREIGN KEY (DriverID) REFERENCES Drivers(DriverID) ON DELETE SET NULL
+);
+
+INSERT INTO Drivers (Nome, CNH, Endereço, Contato) 
+VALUES ('Carlos Silva', 'ABC123456', 'Rua A, 123', '111-222-3333');
+
+INSERT INTO Clients (Nome, Empresa, Endereço, Contato) 
+VALUES ('José Santos', 'Empresa X', 'Rua B, 456', '444-555-6666');
+
+INSERT INTO Orders (ClientID, DriverID, DetalhesPedido, DataEntrega, Status) 
+VALUES (1, 1, 'Entrega de caixas', '2024-11-15', 'Pendente');
+
+SELECT * FROM Orders WHERE Status = 'Pendente';
+
+UPDATE Orders SET Status = 'Concluído' WHERE OrderID = 1;
+
+DELETE FROM Clients WHERE ClientID = 1;
